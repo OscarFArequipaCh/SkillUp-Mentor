@@ -1,5 +1,5 @@
 // models/userModel.js
-class User {
+export class User {
   constructor(id, name, email, password, role, photo, dateCreated, region) {
     this.id = id;
     this.name = name;
