@@ -1,9 +1,16 @@
 import express from "express";
-import userRoutes from "./routes/userRoutes.js";
+import userController from "./apiControllers/userController.js";
+import apprenticeController from "./apiControllers/apprenticeController.js";
+import mentorController from "./apiControllers/mentorController.js";
 
 const app = express();
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
+// Rutas base
+app.use("/api/users", userController);
+app.use("/api/apprentices", apprenticeController);
+app.use("/api/mentors", mentorController);
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// Servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Servidor escuchando en puerto ${PORT}`));

@@ -11,5 +11,3 @@ export class User {
     this.region = region;
   }
 }
-
-module.exports = User;

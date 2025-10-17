@@ -6,6 +6,8 @@ dist/
 build/
 config/
 
+database/skillup.db
+
 # Archivos de configuración local
 .env
 .env.local
