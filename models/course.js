@@ -1,5 +1,5 @@
 // models/courseModel.js
-class Course {
+export class Course {
   constructor(id, title, description, startDate, endDate, status, cost, id_mentor, id_apprentice) {
     this.id = id;
     this.title = title;
@@ -12,5 +12,3 @@ class Course {
     this.id_apprentice = id_apprentice;
   }
 }
-
-module.exports = Course;

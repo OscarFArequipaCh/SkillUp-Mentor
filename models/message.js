@@ -1,5 +1,5 @@
 // models/messageModel.js
-class Message {
+export class Message {
   constructor(id, id_chat, content, datePublished, is_read = false) {
     this.id = id;
     this.id_chat = id_chat;
@@ -8,4 +8,3 @@ class Message {
     this.is_read = is_read;
   }
 }
-module.exports = Message;

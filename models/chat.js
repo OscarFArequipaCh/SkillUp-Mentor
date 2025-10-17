@@ -1,5 +1,5 @@
 // models/chatModel.js
-class Chat {
+export class Chat {
   constructor(id, id_sender, id_receiver, created_at) {
     this.id = id;
     this.id_sender = id_sender;
@@ -7,4 +7,3 @@ class Chat {
     this.created_at = created_at || new Date().toISOString();
   }
 }
-module.exports = Chat;

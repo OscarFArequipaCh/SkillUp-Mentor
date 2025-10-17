@@ -1,5 +1,5 @@
 // models/sessionModel.js
-class Session {
+export class Session {
   constructor(id, startDate, mode, duration, status, id_course) {
     this.id = id;
     this.startDate = startDate;
@@ -9,4 +9,3 @@ class Session {
     this.id_course = id_course;
   }
 }
-module.exports = Session;
