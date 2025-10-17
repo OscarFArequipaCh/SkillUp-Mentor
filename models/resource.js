@@ -1,5 +1,5 @@
 // models/resourceModel.js
-class Resource {
+export class Resource {
   constructor(id, resource_url, description, id_course) {
     this.id = id;
     this.resource_url = resource_url; // link a documento o video
@@ -7,4 +7,3 @@ class Resource {
     this.id_course = id_course;
   }
 }
-module.exports = Resource;

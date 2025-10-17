@@ -1,5 +1,5 @@
 // models/ratingModel.js
-class Rating {
+export class Rating {
   constructor(id, score, comment, date, ratedBy, ratedFor, id_user) {
     this.id = id;
     this.score = score; // 1 a 5
@@ -10,4 +10,3 @@ class Rating {
     this.id_user = id_user; // redundante si se asocia con user base
   }
 }
-module.exports = Rating;
