@@ -1,4 +1,6 @@
+import cors from "cors";
 import express from "express";
+
 import userController from "./apiControllers/userController.js";
 import apprenticeController from "./apiControllers/apprenticeController.js";
 import mentorController from "./apiControllers/mentorController.js";
@@ -12,6 +14,17 @@ import ratingController from "./apiControllers/ratingController.js";
 import resourceController from "./apiControllers/resourceController.js"
 
 const app = express();
+
+// 🧩 CORS — habilita acceso desde el frontend (127.0.0.1 o localhost:5500)
+app.use(
+  cors({
+    origin: ["http://127.0.0.1:5500", "http://localhost:5500"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
+// Middleware para JSON
 app.use(express.json());
 
 // Rutas base
