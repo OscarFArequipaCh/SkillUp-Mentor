@@ -12,16 +12,15 @@ export class ChatService {
     return await this.chatRepository.getById(id);
   }
     async createChat(data) {
-    if (!data.message || !data.timestamp || !data.id_user || !data.id_mentor) {
+    if (!data.id_sender || !data.id_receiver) {
         throw new Error("Message, timestamp, user ID, and mentor ID are required");
     }
 
     const newChat = new Chat(
         null,
-        data.message,
-        data.timestamp,
-        data.id_user,
-        data.id_mentor
+        data.id_sender,
+        data.id_receiver,
+        new Date().toISOString()
     );
     const id = await this.chatRepository.create(newChat);
     return { id, ...newChat };
@@ -31,10 +30,9 @@ export class ChatService {
     if (!existing) throw new Error("Chat not found");
     const updated = new Chat(
         id,
-        data.message || existing.message,
-        data.timestamp || existing.timestamp,
-        data.id_user || existing.id_user,
-        data.id_mentor || existing.id_mentor
+        data.id_sender || existing.id_sender,
+        data.id_receiver || existing.id_receiver,
+        existing.created_at
     );
     await this.chatRepository.update(id, updated);
     return updated;
