@@ -1,5 +1,6 @@
 import { UserRepository } from "../repositories/userRepository.js";
 import { User } from "../models/user.js";
+import bcrypt from "bcrypt";
 
 export class UserService {
   constructor() {
@@ -17,15 +18,33 @@ export class UserService {
     return user;
   }
 
+  async getUserByEmail(data) {
+    const { email, password } = data;
+    if (!email || !password) throw new Error("Email and password are required");
+
+    const user = await this.userRepository.getByEmail(email);
+    if (!user) throw new Error("Incorrect Email");
+
+    // ✅ bcrypt se encarga de comparar el hash
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new Error("Incorrect password");
+    
+    return user;
+  }
+
   async createUser(data) {
     if (!data.name || !data.email || !data.password) {
       throw new Error("Name, email, and password are required");
     }
+
+     // ✅ generar hash del password antes de guardar
+    const hashedPassword = await bcrypt.hash(data.password, 10); // 10 = saltRounds
+
     const newUser = new User(
       null,
       data.name,
       data.email,
-      data.password,
+      hashedPassword, // guardamos el hash
       data.role || "apprentice",
       data.photo || null,
       new Date().toISOString(),
@@ -39,11 +58,17 @@ export class UserService {
     const existing = await this.userRepository.getById(id);
     if (!existing) throw new Error("User not found");
 
+    // Si se envía un nuevo password, se vuelve a hashear
+    let newPassword = existing.password;
+    if (data.password) {
+      newPassword = await bcrypt.hash(data.password, 10);
+    }
+
     const updated = new User(
       id,
       data.name || existing.name,
       data.email || existing.email,
-      data.password || existing.password,
+      newPassword,
       data.role || existing.role,
       data.photo || existing.photo,
       existing.dateCreated,

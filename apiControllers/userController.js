@@ -24,6 +24,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ✅ LOGIN con POST /api/users/login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userService.getUserByEmail({ email, password });
+    res.json(user);
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+});
+
+
 // POST /api/users
 router.post("/", async (req, res) => {
   try {

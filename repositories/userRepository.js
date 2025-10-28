@@ -21,6 +21,13 @@ export class UserRepository {
       : null;
   }
 
+  async getByEmail(email) {
+    const db = await openDb();
+    const r = await db.get("SELECT * FROM user WHERE email = ?", [email]);
+    await db.close();
+    return r ? new User(r.id, r.name, r.email, r.password, r.role, r.photo, r.dateCreated, r.region) : null;
+  }
+
   async create(user) {
     const db = await openDb();
     const { name, email, password, role, photo, region } = user;
