@@ -1,4 +1,4 @@
-class Mentor {
+export class Mentor {
   constructor(id, experience, schedules, languages, certificates, id_user, id_area, id_pedagogicalMethod) {
     this.id = id;
     this.experience = experience; // descripción o años
@@ -11,4 +11,4 @@ class Mentor {
   }
 }
 
-module.exports = Mentor;
+export default Mentor;

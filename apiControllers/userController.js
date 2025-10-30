@@ -1,8 +1,16 @@
+// apiControllers/userController.js
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import { UserService } from "../service/userService.js";
+import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 const userService = new UserService();
+
+// (opcional) para poder resolver rutas si lo necesitas
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // GET /api/users
 router.get("/", async (req, res) => {
@@ -24,7 +32,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ✅ LOGIN con POST /api/users/login
+// POST /api/users/login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -35,22 +43,26 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
-// POST /api/users
-router.post("/", async (req, res) => {
+// POST /api/users - Crear usuario con foto opcional
+router.post("/", upload.single("photo"), async (req, res) => {
   try {
-    const newUser = await userService.createUser(req.body);
+    const data = req.body || {};
+    const file = req.file || null;
+    const newUser = await userService.createUser(data, file);
     res.status(201).json(newUser);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// PUT /api/users/:id
-router.put("/:id", async (req, res) => {
+// PUT /api/users/:id - Actualizar usuario con foto opcional
+router.put("/:id", upload.single("photo"), async (req, res) => {
   try {
-    const updated = await userService.updateUser(req.params.id, req.body);
-    res.json(updated);
+    const id = req.params.id;
+    const data = req.body || {};
+    const file = req.file || null;
+    const updatedUser = await userService.updateUser(id, data, file);
+    res.json(updatedUser);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "path";
 
 import userController from "./apiControllers/userController.js";
 import apprenticeController from "./apiControllers/apprenticeController.js";
@@ -20,12 +21,16 @@ app.use(
   cors({
     origin: ["http://127.0.0.1:5500", "http://localhost:5500"],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 // Middleware para JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos (imágenes)
+app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
 
 // Rutas base
 app.use("/api/users", userController);

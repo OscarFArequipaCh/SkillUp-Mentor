@@ -8,6 +8,10 @@ config/
 
 database/skillup.db
 
+# Archivos multimedia
+public/uploads/
+uploads/
+
 # Archivos de configuración local
 .env
 .env.local

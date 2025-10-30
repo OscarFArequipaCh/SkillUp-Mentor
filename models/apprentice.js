@@ -1,5 +1,5 @@
 // models/apprenticeModel.js
-class Apprentice {
+export class Apprentice {
   constructor(id, certificates, languages, degree, gender, discount, id_user) {
     this.id = id;
     this.certificates = certificates || [];
@@ -11,4 +11,4 @@ class Apprentice {
   }
 }
 
-module.exports = Apprentice;
+export default Apprentice;
