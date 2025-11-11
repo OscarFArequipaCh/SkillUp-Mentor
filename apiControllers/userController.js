@@ -1,6 +1,7 @@
 // apiControllers/userController.js
 import express from "express";
 import path from "path";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import { fileURLToPath } from "url";
 import { UserService } from "../service/userService.js";
 import { upload } from "../middleware/upload.js";
@@ -13,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // GET /api/users
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const users = await userService.getAllUsers();
     res.json(users);
@@ -23,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/users/:id
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const user = await userService.getUserById(req.params.id);
     res.json(user);
@@ -36,15 +37,16 @@ router.get("/:id", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await userService.getUserByEmail({ email, password });
-    res.json(user);
+    const result = await userService.getUserByEmail({ email, password });
+    res.json(result);
   } catch (error) {
     res.status(401).json({ error: error.message });
   }
 });
 
+
 // POST /api/users - Crear usuario con foto opcional
-router.post("/", upload.single("photo"), async (req, res) => {
+router.post("/", authMiddleware, upload.single("photo"), async (req, res) => {
   try {
     const data = req.body || {};
     const file = req.file || null;
@@ -56,7 +58,7 @@ router.post("/", upload.single("photo"), async (req, res) => {
 });
 
 // PUT /api/users/:id - Actualizar usuario con foto opcional
-router.put("/:id", upload.single("photo"), async (req, res) => {
+router.put("/:id", authMiddleware, upload.single("photo"), async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body || {};
@@ -69,7 +71,7 @@ router.put("/:id", upload.single("photo"), async (req, res) => {
 });
 
 // DELETE /api/users/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     await userService.deleteUser(req.params.id);
     res.json({ message: "User deleted successfully" });

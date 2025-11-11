@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import path from "path";
+
+dotenv.config();
 
 import userController from "./apiControllers/userController.js";
 import apprenticeController from "./apiControllers/apprenticeController.js";

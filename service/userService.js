@@ -2,9 +2,12 @@
 import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { UserRepository } from "../repositories/userRepository.js";
 import { User } from "../models/user.js";
 
+dotenv.config();
 export class UserService {
   constructor() {
     this.userRepository = new UserRepository();
@@ -36,7 +39,30 @@ export class UserService {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error("Incorrect password");
 
-    return user;
+    // ✅ Crear token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
+    );
+
+    // ✅ Devolver datos sin contraseña
+    return {
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        photo: user.photo,
+        role: user.role,
+        region: user.region,
+        dateCreated: user.dateCreated
+      }
+    };
   }
 
   async createUser(data, file) {
