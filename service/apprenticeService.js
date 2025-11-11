@@ -18,7 +18,9 @@ export class ApprenticeService {
   }
 
   async createApprentice(data) {
-    if (!data.id_user) throw new Error("User ID is required");
+    if (!data.user || !data.user.id) {
+      throw new Error("Debe enviar un usuario con un ID válido");
+    }
 
     const newApprentice = new Apprentice(
       null,
@@ -27,11 +29,12 @@ export class ApprenticeService {
       data.degree || "",
       data.gender || "unspecified",
       data.discount || 0,
-      data.id_user
+      data.user.id
     );
 
     const id = await this.apprenticeRepository.create(newApprentice);
-    return { id, ...newApprentice };
+
+    return await this.getApprenticeById(id); // ✅ ya devuelve con user anidado
   }
 
   async updateApprentice(id, data) {

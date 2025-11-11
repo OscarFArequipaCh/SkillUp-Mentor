@@ -4,26 +4,42 @@ import Apprentice from "../models/apprentice.js";
 export class ApprenticeRepository {
   async getAll() {
     const db = await openDb();
-    const rows = await db.all("SELECT * FROM apprentice");
+    const rows = await db.all(`
+      SELECT a.*, u.id as uid, u.name, u.email, u.photo
+      FROM apprentice a
+      JOIN user u ON a.id_user = u.id
+    `);
     await db.close();
-    return rows.map(
-      (r) =>
-        new Apprentice(
-          r.id,
-          JSON.parse(r.certificates || "[]"),
-          JSON.parse(r.languages || "[]"),
-          r.degree,
-          r.gender,
-          r.discount,
-          r.id_user
-        )
+
+    return rows.map((r) =>
+      new Apprentice(
+        r.id,
+        JSON.parse(r.certificates || "[]"),
+        JSON.parse(r.languages || "[]"),
+        r.degree,
+        r.gender,
+        r.discount,
+        r.id_user,
+        {
+          id: r.uid,
+          name: r.name,
+          email: r.email,
+          photo: r.photo
+        }
+      )
     );
   }
 
   async getById(id) {
     const db = await openDb();
-    const r = await db.get("SELECT * FROM apprentice WHERE id=?", [id]);
+    const r = await db.get(`
+      SELECT a.*, u.id as uid, u.name, u.email, u.photo
+      FROM apprentice a
+      JOIN user u ON a.id_user = u.id
+      WHERE a.id = ?
+    `, [id]);
     await db.close();
+
     return r
       ? new Apprentice(
           r.id,
@@ -32,7 +48,13 @@ export class ApprenticeRepository {
           r.degree,
           r.gender,
           r.discount,
-          r.id_user
+          r.id_user,
+          {
+            id: r.uid,
+            name: r.name,
+            email: r.email,
+            photo: r.photo
+          }
         )
       : null;
   }

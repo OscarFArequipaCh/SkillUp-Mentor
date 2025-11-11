@@ -4,27 +4,38 @@ import Mentor from "../models/mentor.js";
 export class MentorRepository {
   async getAll() {
     const db = await openDb();
-    const rows = await db.all("SELECT * FROM mentor");
+    const rows = await db.all(`
+      SELECT m.*, u.id AS user_id, u.name, u.email, u.photo
+      FROM mentor m
+      JOIN user u ON u.id = m.id_user
+    `);
     await db.close();
-    return rows.map(
-      (r) =>
-        new Mentor(
-          r.id,
-          r.experience,
-          JSON.parse(r.schedules || "[]"),
-          JSON.parse(r.languages || "[]"),
-          JSON.parse(r.certificates || "[]"),
-          r.id_user,
-          r.id_area,
-          r.id_pedagogicalMethod
-        )
+
+    return rows.map(r =>
+      new Mentor(
+        r.id,
+        r.experience,
+        JSON.parse(r.schedules || "[]"),
+        JSON.parse(r.languages || "[]"),
+        JSON.parse(r.certificates || "[]"),
+        { id: r.user_id, name: r.name, email: r.email, photo: r.photo }, // <── user object
+        r.id_area,
+        r.id_pedagogicalMethod
+      )
     );
   }
 
   async getById(id) {
     const db = await openDb();
-    const r = await db.get("SELECT * FROM mentor WHERE id = ?", [id]);
+    const r = await db.get(
+      `SELECT m.*, u.id AS user_id, u.name, u.email, u.photo
+      FROM mentor m
+      JOIN user u ON u.id = m.id_user
+      WHERE m.id = ?`,
+      [id]
+    );
     await db.close();
+
     return r
       ? new Mentor(
           r.id,
@@ -32,7 +43,7 @@ export class MentorRepository {
           JSON.parse(r.schedules || "[]"),
           JSON.parse(r.languages || "[]"),
           JSON.parse(r.certificates || "[]"),
-          r.id_user,
+          { id: r.user_id, name: r.name, email: r.email, photo: r.photo },
           r.id_area,
           r.id_pedagogicalMethod
         )
