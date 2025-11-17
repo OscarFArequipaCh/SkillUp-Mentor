@@ -18,7 +18,7 @@ export class MentorService {
   }
 
   async createMentor(data) {
-    if (!data.user?.id || !data.id_area || !data.id_pedagogicalMethod) {
+    if (!data.user?.id || !data.area?.id || !data.pedagogicalMethod?.id) {
       throw new Error("User, area, and pedagogical method are required");
     }
 
@@ -29,13 +29,15 @@ export class MentorService {
       data.languages || [],
       data.certificates || [],
       data.user, // <── user completo
-      data.id_area,
-      data.id_pedagogicalMethod
+      data.area,
+      data.pedagogicalMethod
     );
 
     const id = await this.mentorRepository.create({
       ...newMentor,
       id_user: data.user.id, // <── el repo sigue usando FK para insertar
+      id_area: data.area.id,
+      id_pedagogicalMethod: data.pedagogicalMethod.id
     });
 
     return await this.getMentorById(id); // <── devuelve con JOIN
@@ -53,13 +55,15 @@ export class MentorService {
       data.languages || existing.languages,
       data.certificates || existing.certificates,
       existing.user, // <── user permanece igual
-      data.id_area || existing.id_area,
-      data.id_pedagogicalMethod || existing.id_pedagogicalMethod
+      existing.area,
+      existing.pedagogicalMethod
     );
 
     await this.mentorRepository.update(id, {
       ...updated,
-      id_user: updated.user.id
+      id_user: updated.user.id,
+      id_area: updated.area.id,
+      id_pedagogicalMethod: updated.pedagogicalMethod.id
     });
 
     return await this.getMentorById(id);

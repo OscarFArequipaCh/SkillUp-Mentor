@@ -5,9 +5,14 @@ export class MentorRepository {
   async getAll() {
     const db = await openDb();
     const rows = await db.all(`
-      SELECT m.*, u.id AS user_id, u.name, u.email, u.photo
+      SELECT m.*, 
+      u.id AS user_id, u.name AS user_name, u.email, u.photo,
+      a.id AS id_area, a.name AS area_name, a.description AS area_description,
+      p.id AS id_pedagogicalMethod, p.name AS pedagogicalMethod_name, p.description AS pedagogicalMethod_description
       FROM mentor m
       JOIN user u ON u.id = m.id_user
+      JOIN area a ON a.id = m.id_area
+      JOIN pedagogicalMethod p ON p.id = m.id_pedagogicalMethod
     `);
     await db.close();
 
@@ -19,8 +24,8 @@ export class MentorRepository {
         JSON.parse(r.languages || "[]"),
         JSON.parse(r.certificates || "[]"),
         { id: r.user_id, name: r.name, email: r.email, photo: r.photo }, // <── user object
-        r.id_area,
-        r.id_pedagogicalMethod
+        { id: r.id_area, name: r.area_name, description: r.area_description }, // <── area object
+        { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description } // <── pedagogicalMethod object
       )
     );
   }
@@ -28,9 +33,14 @@ export class MentorRepository {
   async getById(id) {
     const db = await openDb();
     const r = await db.get(
-      `SELECT m.*, u.id AS user_id, u.name, u.email, u.photo
+      `SELECT m.*, 
+      u.id AS user_id, u.name AS user_name, u.email, u.photo,
+      a.id AS id_area, a.name AS area_name, a.description AS area_description,
+      p.id AS id_pedagogicalMethod, p.name AS pedagogicalMethod_name, p.description AS pedagogicalMethod_description
       FROM mentor m
       JOIN user u ON u.id = m.id_user
+      JOIN area a ON a.id = m.id_area
+      JOIN pedagogicalMethod p ON p.id = m.id_pedagogicalMethod
       WHERE m.id = ?`,
       [id]
     );
@@ -44,8 +54,8 @@ export class MentorRepository {
           JSON.parse(r.languages || "[]"),
           JSON.parse(r.certificates || "[]"),
           { id: r.user_id, name: r.name, email: r.email, photo: r.photo },
-          r.id_area,
-          r.id_pedagogicalMethod
+          { id: r.id_area, name: r.area_name, description: r.area_description },
+          { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description }
         )
       : null;
   }
