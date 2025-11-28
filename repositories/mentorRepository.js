@@ -23,7 +23,7 @@ export class MentorRepository {
         JSON.parse(r.schedules || "[]"),
         JSON.parse(r.languages || "[]"),
         JSON.parse(r.certificates || "[]"),
-        { id: r.user_id, name: r.name, email: r.email, photo: r.photo }, // <── user object
+        { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo }, // <── user object
         { id: r.id_area, name: r.area_name, description: r.area_description }, // <── area object
         { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description } // <── pedagogicalMethod object
       )
@@ -53,7 +53,7 @@ export class MentorRepository {
           JSON.parse(r.schedules || "[]"),
           JSON.parse(r.languages || "[]"),
           JSON.parse(r.certificates || "[]"),
-          { id: r.user_id, name: r.name, email: r.email, photo: r.photo },
+          { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo },
           { id: r.id_area, name: r.area_name, description: r.area_description },
           { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description }
         )
