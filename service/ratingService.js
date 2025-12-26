@@ -11,16 +11,29 @@ export class RatingService {
     async getRatingById(id) {
         return await this.ratingRepository.getById(id);
     }
+    async getRatingByUserId(userId) {
+        return await this.ratingRepository.getByUser(userId);
+    }
     async createRating(ratingData) {
-        const rating = new Rating(
+        const newrating = new Rating(
             null,
             ratingData.score,
             ratingData.comment,
-            ratingData.id_user,
-            ratingData.id_course
+            new Date().toISOString(),
+            ratingData.ratedBy,
+            ratingData.ratedFor,
+            ratingData.user
         );
-        return await this.ratingRepository.create(rating);
+
+        const id = await this.ratingRepository.create({
+            ...newrating,
+            id_user: ratingData.user.id
+        });
+        //return await this.ratingRepository.create(rating);
+        return await this.getRatingById(id);
     }
+
+    // === FALTA CORRECCION ===
     async updateRating(id, ratingData) {
         const existingRating = await this.ratingRepository.getById(id);
         if (!existingRating) {

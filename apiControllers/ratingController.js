@@ -21,6 +21,17 @@ router.get("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
+
+// GET /api/ratings/user/:userId
+router.get("/user/:userId", async (req, res) => {
+    try {
+    const rating = await ratingService.getRatingByUserId(req.params.userId);
+    res.json(rating);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 // POST /api/ratings
 router.post("/", async (req, res) => {
     try {

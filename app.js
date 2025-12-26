@@ -22,7 +22,7 @@ const app = express();
 // 🧩 CORS — habilita acceso desde el frontend (127.0.0.1 o localhost:5500)
 app.use(
   cors({
-    origin: ["http://127.0.0.1:5500", "http://localhost:5500"],
+    origin: ["http://127.0.0.1:5500", "http://localhost:5500", "http://127.0.0.1:5173", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

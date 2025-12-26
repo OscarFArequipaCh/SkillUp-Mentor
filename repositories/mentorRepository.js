@@ -60,6 +60,36 @@ export class MentorRepository {
       : null;
   }
 
+  async getByArea(area_name) {
+    const db = await openDb();
+    const rows = await db.all(
+      `SELECT m.*,
+      u.id AS user_id, u.name AS user_name, u.email, u.photo,
+      a.id AS id_area, a.name AS area_name, a.description AS area_description,
+      p.id AS id_pedagogicalMethod, p.name AS pedagogicalMethod_name, p.description AS pedagogicalMethod_description
+      FROM mentor m
+      JOIN user u ON u.id = m.id_user
+      JOIN area a ON a.id = m.id_area
+      JOIN pedagogicalMethod p ON p.id = m.id_pedagogicalMethod
+      WHERE a.area_name = ?`,
+      [area_name]
+    );
+    await db.close();
+
+    return r
+      ? new Mentor(
+          r.id,
+          r.experience,
+          JSON.parse(r.schedules || "[]"),
+          JSON.parse(r.languages || "[]"),
+          JSON.parse(r.certificates || "[]"),
+          { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo },
+          { id: r.id_area, name: r.area_name, description: r.area_description },
+          { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description }
+        )
+      : null;
+  }
+
   async create(mentor) {
     const db = await openDb();
     const { experience, schedules, languages, certificates, id_user, id_area, id_pedagogicalMethod } = mentor;

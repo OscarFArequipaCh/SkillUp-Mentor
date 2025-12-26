@@ -4,31 +4,81 @@ import { Rating } from "../models/rating.js";
 export class RatingRepository {
     async getAll() {
         const db = await openDb();
-        const rows = await db.all("SELECT * FROM rating");
+        const rows = await db.all(`
+        SELECT r.*,
+        u.id AS user_id, u.name AS user_name, u.email
+        FROM rating r
+        JOIN user u ON u.id = r.id_user
+        `);
         await db.close();
-        return rows.map(
-            (r) => new Rating(r.id, r.score, r.comment, r.id_user, r.id_course)
+        return rows.map(r => 
+            new Rating(
+                r.id, 
+                r.score, 
+                r.comment,
+                r.date,
+                r.ratedBy,
+                r.ratedFor,
+                { id: r.user_id, name: r.user_name, email: r.email}
+            )
         );
     }
     async getById(id) {
         const db = await openDb();
-        const r = await db.get("SELECT * FROM rating WHERE id = ?", [id]);
+        const r = await db.get(`
+        SELECT r.*,
+        u.id AS user_id, u.name AS user_name, u.email
+        FROM rating r
+        JOIN user u ON u.id = r.id_user
+        WHERE r.id = ?
+        `, [id]);
         await db.close();
         return r
-            ? new Rating(r.id, r.score, r.comment, r.id_user, r.id_course)
+            ? new Rating(
+                r.id, 
+                r.score, 
+                r.comment, 
+                r.ratedBy, 
+                r.ratedFor, 
+                r.id_user, 
+                { id: r.user_id, name: r.user_name, email: r.email })
             : null;
+    }
+    async getByUser(userId) {
+        const db = await openDb();
+        const rows = await db.all(`
+        SELECT r.*,
+        u.id AS user_id, u.name AS user_name, u.email
+        FROM rating r
+        JOIN user u ON u.id = r.id_user
+        WHERE r.id_user = ?
+        `, [userId]);
+        await db.close();
+        return rows.map(
+            (r) => new Rating(
+                r.id, 
+                r.score, 
+                r.comment,
+                r.date,
+                r.ratedBy,
+                r.ratedFor,
+                { id: r.user_id, name: r.user_name, email: r.email}
+            )
+        );
     }
     async create(rating) {
         const db = await openDb();
-        const { score, comment, id_user, id_course } = rating;
+        const { score, comment, ratedBy, ratedFor, id_user } = rating;
         const result = await db.run(
-            `INSERT INTO rating (score, comment, id_user, id_course)
-            VALUES (?, ?, ?, ?)`,
-            [score, comment, id_user, id_course]
+            `INSERT INTO rating (score, comment, ratedBy, ratedFor, id_user)
+            VALUES (?, ?, ?, ?, ?)`,
+            [score, comment, ratedBy, ratedFor, id_user]
         );
         await db.close();
         return result.lastID;
     }
+
+    // === FALTA CORRECCION ===
     async update(id, rating) {
         const db = await openDb();
         const { score, comment, id_user, id_course } = rating;
