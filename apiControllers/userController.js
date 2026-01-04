@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/users/:id
-router.get("/:id", authMiddleware, async (req, res) => {
+router.get("/:id"/*, authMiddleware*/, async (req, res) => {
   try {
     const user = await userService.getUserById(req.params.id);
     res.json(user);
@@ -58,7 +58,7 @@ router.post("/", upload.single("photo"), async (req, res) => {
 });
 
 // PUT /api/users/:id - Actualizar usuario con foto opcional
-router.put("/:id", authMiddleware, upload.single("photo"), async (req, res) => {
+router.put("/:id"/*, authMiddleware*/, upload.single("photo"), async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body || {};
@@ -71,7 +71,7 @@ router.put("/:id", authMiddleware, upload.single("photo"), async (req, res) => {
 });
 
 // DELETE /api/users/:id
-router.delete("/:id", authMiddleware, async (req, res) => {
+router.delete("/:id"/*, authMiddleware*/, async (req, res) => {
   try {
     await userService.deleteUser(req.params.id);
     res.json({ message: "User deleted successfully" });

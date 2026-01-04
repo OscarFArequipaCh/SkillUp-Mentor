@@ -126,7 +126,6 @@ export class UserRepository {
       "INSERT INTO user (name, email, password, role, photo, region, gender, birthDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [name, email, password, role, photo, region, gender, birthDate]
     );
-    //console.log(result);
     await db.close();
     return result.lastID;
   }

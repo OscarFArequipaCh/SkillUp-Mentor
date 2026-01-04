@@ -145,7 +145,7 @@ export class UserService {
     );
 
     // ===== Falta optimizar el envio de lenguajes =====
-
+    await this.speakRepository.replaceUserLanguages(id, data.language);
     await this.userRepository.update(id, updated);
     return updated;
   }

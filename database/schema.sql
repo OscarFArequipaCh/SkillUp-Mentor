@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS apprentice (
 -- =========================
 -- LANGUAGES
 -- =========================
-CREATE TABLE IF NOT EXISTS languages (
+CREATE TABLE IF NOT EXISTS language (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL
 );
@@ -87,11 +87,11 @@ CREATE TABLE IF NOT EXISTS languages (
 -- =========================
 -- SPEAKS (User - Language)
 -- =========================
-CREATE TABLE IF NOT EXISTS speaks (
+CREATE TABLE IF NOT EXISTS speak (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  id_Languages INTEGER,
+  id_Language INTEGER,
   id_user INTEGER,
-  FOREIGN KEY (id_Languages) REFERENCES languages(id),
+  FOREIGN KEY (id_Language) REFERENCES language(id),
   FOREIGN KEY (id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 
