@@ -24,10 +24,11 @@ export class MentorService {
 
     const newMentor = new Mentor(
       null,
-      data.experience || "",
-      data.schedules || [],
-      data.languages || [],
-      data.certificates || [],
+      data.profile,
+      // data.experience || "",
+      // data.schedules || [],
+      // data.languages || [],
+      // data.certificates || [],
       data.user, // <── user completo
       data.area,
       data.pedagogicalMethod
@@ -50,10 +51,11 @@ export class MentorService {
 
     const updated = new Mentor(
       id,
-      data.experience || existing.experience,
-      data.schedules || existing.schedules,
-      data.languages || existing.languages,
-      data.certificates || existing.certificates,
+      data.profile || existing.profile,
+      // data.experience || existing.experience,
+      // data.schedules || existing.schedules,
+      // data.languages || existing.languages,
+      // data.certificates || existing.certificates,
       existing.user, // <── user permanece igual
       existing.area,
       existing.pedagogicalMethod

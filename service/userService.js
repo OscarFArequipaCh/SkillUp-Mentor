@@ -5,12 +5,14 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { UserRepository } from "../repositories/userRepository.js";
+import { SpeakRepository } from "../repositories/speakRepoitory.js";
 import { User } from "../models/user.js";
 
 dotenv.config();
 export class UserService {
   constructor() {
     this.userRepository = new UserRepository();
+    this.speakRepository = new SpeakRepository();
     this.uploadDir = path.join(process.cwd(), "public", "uploads", "users");
     // asegurar existencia (redundante con middleware, pero seguro)
     if (!fs.existsSync(this.uploadDir)) {
@@ -60,7 +62,9 @@ export class UserService {
         photo: user.photo,
         role: user.role,
         region: user.region,
-        dateCreated: user.dateCreated
+        dateCreated: user.dateCreated,
+        gender: user.gender,
+        birthDate: user.birthDate
       }
     };
   }
@@ -83,14 +87,22 @@ export class UserService {
       data.name,
       data.email,
       hashedPassword,
-      data.role || "apprentice",
+      data.role || "user",
       photoPath,
       new Date().toISOString(),
-      data.region || "unspecified"
+      data.region || "unspecified",
+      data.gender,
+      data.birthDate || null
     );
 
+    // ===== Falta optimizar el envio de lenguajes =====
+
     const id = await this.userRepository.create(newUser);
-    return { id, ...newUser };
+    if (data.language && Array.isArray(data.language)) {
+      await this.speakRepository.addLanguagesToUser(id, data.language);
+    }
+    newUser.id = id;
+    return newUser;
   }
 
   async updateUser(id, data, file) {
@@ -127,8 +139,12 @@ export class UserService {
       data.role || existing.role,
       photoPath,
       existing.dateCreated,
-      data.region || existing.region
+      data.region || existing.region,
+      data.gender || existing.gender,
+      data.birthDate || existing.birthDate
     );
+
+    // ===== Falta optimizar el envio de lenguajes =====
 
     await this.userRepository.update(id, updated);
     return updated;

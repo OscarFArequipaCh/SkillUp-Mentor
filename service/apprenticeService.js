@@ -24,11 +24,7 @@ export class ApprenticeService {
 
     const newApprentice = new Apprentice(
       null,
-      data.certificates || [],
-      data.languages || [],
       data.degree || "",
-      data.gender || "unspecified",
-      data.discount || 0,
       data.user.id
     );
 
@@ -43,11 +39,7 @@ export class ApprenticeService {
 
     const updated = new Apprentice(
       id,
-      data.certificates || existing.certificates,
-      data.languages || existing.languages,
       data.degree || existing.degree,
-      data.gender || existing.gender,
-      data.discount || existing.discount,
       existing.id_user
     );
 

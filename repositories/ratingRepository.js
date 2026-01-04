@@ -18,7 +18,6 @@ export class RatingRepository {
                 r.comment,
                 r.date,
                 r.ratedBy,
-                r.ratedFor,
                 { id: r.user_id, name: r.user_name, email: r.email}
             )
         );
@@ -38,8 +37,7 @@ export class RatingRepository {
                 r.id, 
                 r.score, 
                 r.comment, 
-                r.ratedBy, 
-                r.ratedFor, 
+                r.ratedBy,  
                 r.id_user, 
                 { id: r.user_id, name: r.user_name, email: r.email })
             : null;
@@ -61,18 +59,17 @@ export class RatingRepository {
                 r.comment,
                 r.date,
                 r.ratedBy,
-                r.ratedFor,
                 { id: r.user_id, name: r.user_name, email: r.email}
             )
         );
     }
     async create(rating) {
         const db = await openDb();
-        const { score, comment, ratedBy, ratedFor, id_user } = rating;
+        const { score, comment, ratedBy, id_user } = rating;
         const result = await db.run(
-            `INSERT INTO rating (score, comment, ratedBy, ratedFor, id_user)
-            VALUES (?, ?, ?, ?, ?)`,
-            [score, comment, ratedBy, ratedFor, id_user]
+            `INSERT INTO rating (score, comment, ratedBy, id_user)
+            VALUES (?, ?, ?, ?)`,
+            [score, comment, ratedBy, id_user]
         );
         await db.close();
         return result.lastID;

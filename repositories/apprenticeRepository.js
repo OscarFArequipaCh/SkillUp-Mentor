@@ -14,11 +14,7 @@ export class ApprenticeRepository {
     return rows.map((r) =>
       new Apprentice(
         r.id,
-        JSON.parse(r.certificates || "[]"),
-        JSON.parse(r.languages || "[]"),
         r.degree,
-        r.gender,
-        r.discount,
         r.id_user,
         {
           id: r.uid,
@@ -43,11 +39,7 @@ export class ApprenticeRepository {
     return r
       ? new Apprentice(
           r.id,
-          JSON.parse(r.certificates || "[]"),
-          JSON.parse(r.languages || "[]"),
           r.degree,
-          r.gender,
-          r.discount,
           r.id_user,
           {
             id: r.uid,
@@ -61,16 +53,12 @@ export class ApprenticeRepository {
 
   async create(apprentice) {
     const db = await openDb();
-    const { certificates, languages, degree, gender, discount, id_user } = apprentice;
+    const { degree, id_user } = apprentice;
     const result = await db.run(
-      `INSERT INTO apprentice (certificates, languages, degree, gender, discount, id_user)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO apprentice (degree, id_user)
+       VALUES (?, ?)`,
       [
-        JSON.stringify(certificates || []),
-        JSON.stringify(languages || []),
         degree,
-        gender,
-        discount,
         id_user,
       ]
     );
@@ -80,15 +68,11 @@ export class ApprenticeRepository {
 
   async update(id, apprentice) {
     const db = await openDb();
-    const { certificates, languages, degree, gender, discount } = apprentice;
+    const { degree } = apprentice;
     await db.run(
-      `UPDATE apprentice SET certificates=?, languages=?, degree=?, gender=?, discount=? WHERE id=?`,
+      `UPDATE apprentice SET degree=? WHERE id=?`,
       [
-        JSON.stringify(certificates || []),
-        JSON.stringify(languages || []),
         degree,
-        gender,
-        discount,
         id,
       ]
     );

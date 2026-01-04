@@ -16,6 +16,7 @@ import areaController from "./apiControllers/areaController.js";
 import pedagogicalMethodController from "./apiControllers/pedagogicalMethodController.js";
 import ratingController from "./apiControllers/ratingController.js";
 import resourceController from "./apiControllers/resourceController.js"
+import languageController from "./apiControllers/languageController.js";
 
 const app = express();
 
@@ -46,7 +47,8 @@ app.use("/api/messages", messageController);
 app.use("/api/areas", areaController);
 app.use("/api/pedagogical-methods", pedagogicalMethodController);
 app.use("/api/ratings", ratingController);
-app.use("/api/resources", resourceController)
+app.use("/api/resources", resourceController);
+app.use("/api/languages", languageController);
 
 // Servidor
 const PORT = process.env.PORT || 3000;

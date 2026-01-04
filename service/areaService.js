@@ -23,7 +23,7 @@ export class AreaService {
     const updatedArea = new Area(
       id,
       name || existingArea.name,
-        description || existingArea.description
+      description || existingArea.description
     );
     return await this.areaRepository.update(id, updatedArea);
   }

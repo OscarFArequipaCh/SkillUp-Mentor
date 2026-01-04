@@ -21,7 +21,6 @@ export class RatingService {
             ratingData.comment,
             new Date().toISOString(),
             ratingData.ratedBy,
-            ratingData.ratedFor,
             ratingData.user
         );
 
