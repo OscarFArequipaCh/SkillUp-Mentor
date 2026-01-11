@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // GET /api/users
-router.get("/", async (req, res) => {
+router.get("/"/*, authMiddleware*/, async (req, res) => {
   try {
     const users = await userService.getAllUsers();
     res.json(users);
@@ -46,7 +46,7 @@ router.post("/login", async (req, res) => {
 
 
 // POST /api/users - Crear usuario con foto opcional
-router.post("/", upload.single("photo"), async (req, res) => {
+router.post("/"/*, authMiddleware*/, upload.single("photo"), async (req, res) => {
   try {
     const data = req.body || {};
     const file = req.file || null;

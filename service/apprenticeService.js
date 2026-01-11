@@ -23,8 +23,8 @@ export class ApprenticeService {
     }
 
     const newApprentice = new Apprentice(
-      null,
-      data.degree || "",
+      null, 
+      data.degree || "", 
       data.user.id
     );
 

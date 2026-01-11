@@ -25,10 +25,6 @@ export class MentorService {
     const newMentor = new Mentor(
       null,
       data.profile,
-      // data.experience || "",
-      // data.schedules || [],
-      // data.languages || [],
-      // data.certificates || [],
       data.user, // <── user completo
       data.area,
       data.pedagogicalMethod
@@ -36,10 +32,12 @@ export class MentorService {
 
     const id = await this.mentorRepository.create({
       ...newMentor,
-      id_user: data.user.id, // <── el repo sigue usando FK para insertar
-      id_area: data.area.id,
-      id_pedagogicalMethod: data.pedagogicalMethod.id
+       id_user: data.user.id,
+       id_area: data.area.id,
+       id_pedagogicalMethod: data.pedagogicalMethod.id
     });
+
+    //const id = await this.mentorRepository.create(newMentor);
 
     return await this.getMentorById(id); // <── devuelve con JOIN
   }
@@ -52,10 +50,6 @@ export class MentorService {
     const updated = new Mentor(
       id,
       data.profile || existing.profile,
-      // data.experience || existing.experience,
-      // data.schedules || existing.schedules,
-      // data.languages || existing.languages,
-      // data.certificates || existing.certificates,
       existing.user, // <── user permanece igual
       existing.area,
       existing.pedagogicalMethod

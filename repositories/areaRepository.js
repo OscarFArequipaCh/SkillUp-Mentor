@@ -5,18 +5,22 @@ export class AreaRepository {
         const db = await openDb();
         const rows = await db.all("SELECT * FROM area");
         await db.close();
+
         return rows.map(
             (r) => new Area(r.id, r.name, r.description)
         );
     }
+
     async getById(id) {
         const db = await openDb();
         const r = await db.get("SELECT * FROM area WHERE id = ?", [id]);
         await db.close();
-        return r
-            ? new Area(r.id, r.name, r.description)
-            : null;
+
+        return r ? new Area(
+            r.id, r.name, r.description
+        ) : null;
     }
+
     async create(area) {
         const db = await openDb();
         const { name, description } = area;
@@ -26,8 +30,10 @@ export class AreaRepository {
             [name, description]
         );
         await db.close();
+
         return result.lastID;
     }
+
     async update(id, area) {
         const db = await openDb();
         const { name, description } = area;
@@ -36,10 +42,15 @@ export class AreaRepository {
             [name, description, id]
         );
         await db.close();
+
+        return true;
     }
+
     async delete(id) {
         const db = await openDb();
         await db.run("DELETE FROM area WHERE id = ?", [id]);
         await db.close();
+
+        return true;
     }
 }

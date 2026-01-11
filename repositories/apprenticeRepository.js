@@ -13,15 +13,8 @@ export class ApprenticeRepository {
 
     return rows.map((r) =>
       new Apprentice(
-        r.id,
-        r.degree,
-        r.id_user,
-        {
-          id: r.uid,
-          name: r.name,
-          email: r.email,
-          photo: r.photo
-        }
+        r.id, r.degree, r.id_user,
+        { id: r.uid, name: r.name, email: r.email, photo: r.photo }
       )
     );
   }
@@ -36,19 +29,10 @@ export class ApprenticeRepository {
     `, [id]);
     await db.close();
 
-    return r
-      ? new Apprentice(
-          r.id,
-          r.degree,
-          r.id_user,
-          {
-            id: r.uid,
-            name: r.name,
-            email: r.email,
-            photo: r.photo
-          }
-        )
-      : null;
+    return r ? new Apprentice(
+      r.id, r.degree, r.id_user,
+      { id: r.uid, name: r.name, email: r.email, photo: r.photo }
+    ) : null;
   }
 
   async create(apprentice) {
@@ -57,12 +41,10 @@ export class ApprenticeRepository {
     const result = await db.run(
       `INSERT INTO apprentice (degree, id_user)
        VALUES (?, ?)`,
-      [
-        degree,
-        id_user,
-      ]
+      [degree, id_user]
     );
     await db.close();
+
     return result.lastID;
   }
 
@@ -71,12 +53,10 @@ export class ApprenticeRepository {
     const { degree } = apprentice;
     await db.run(
       `UPDATE apprentice SET degree=? WHERE id=?`,
-      [
-        degree,
-        id,
-      ]
+      [degree, id]
     );
     await db.close();
+
     return true;
   }
 
@@ -84,6 +64,7 @@ export class ApprenticeRepository {
     const db = await openDb();
     await db.run("DELETE FROM apprentice WHERE id=?", [id]);
     await db.close();
+    
     return true;
   }
 }

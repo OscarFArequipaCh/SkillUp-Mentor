@@ -18,11 +18,7 @@ export class MentorRepository {
 
     return rows.map(r =>
       new Mentor(
-        r.id,
-        r.profile,
-        //JSON.parse(r.schedules || "[]"),
-        //JSON.parse(r.languages || "[]"),
-        //JSON.parse(r.certificates || "[]"),
+        r.id, r.profile,
         { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo }, // <── user object
         { id: r.id_area, name: r.area_name, description: r.area_description }, // <── area object
         { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description } // <── pedagogicalMethod object
@@ -48,11 +44,7 @@ export class MentorRepository {
 
     return r
       ? new Mentor(
-          r.id,
-          r.profile,
-          //JSON.parse(r.schedules || "[]"),
-          //JSON.parse(r.languages || "[]"),
-          //JSON.parse(r.certificates || "[]"),
+          r.id, r.profile,
           { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo },
           { id: r.id_area, name: r.area_name, description: r.area_description },
           { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description }
@@ -78,12 +70,7 @@ export class MentorRepository {
 
     return r
       ? new Mentor(
-          r.id,
-          r.profile,
-          //r.experience,
-          //JSON.parse(r.schedules || "[]"),
-          //JSON.parse(r.languages || "[]"),
-          //JSON.parse(r.certificates || "[]"),
+          r.id, r.profile,
           { id: r.user_id, name: r.user_name, email: r.email, photo: r.photo },
           { id: r.id_area, name: r.area_name, description: r.area_description },
           { id: r.id_pedagogicalMethod, name: r.pedagogicalMethod_name, description: r.pedagogicalMethod_description }
@@ -97,18 +84,10 @@ export class MentorRepository {
     const result = await db.run(
       `INSERT INTO mentor (profile, id_user, id_area, id_pedagogicalMethod)
        VALUES (?, ?, ?, ?)`,
-      [
-        profile,
-        // experience,
-        // JSON.stringify(schedules || []),
-        // JSON.stringify(languages || []),
-        // JSON.stringify(certificates || []),
-        id_user,
-        id_area,
-        id_pedagogicalMethod,
-      ]
+      [profile, id_user, id_area, id_pedagogicalMethod]
     );
     await db.close();
+    
     return result.lastID;
   }
 
@@ -118,16 +97,7 @@ export class MentorRepository {
     await db.run(
       `UPDATE mentor SET profile=?, id_area=?, id_pedagogicalMethod=?
        WHERE id=?`,
-      [
-        profile,
-        // experience,
-        // JSON.stringify(schedules || []),
-        // JSON.stringify(languages || []),
-        // JSON.stringify(certificates || []),
-        id_area,
-        id_pedagogicalMethod,
-        id,
-      ]
+      [profile, id_area, id_pedagogicalMethod, id]
     );
     await db.close();
     return true;

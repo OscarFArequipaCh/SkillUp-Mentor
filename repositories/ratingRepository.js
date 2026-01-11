@@ -13,15 +13,12 @@ export class RatingRepository {
         await db.close();
         return rows.map(r => 
             new Rating(
-                r.id, 
-                r.score, 
-                r.comment,
-                r.date,
-                r.ratedBy,
+                r.id, r.score, r.comment, r.date, r.ratedBy,
                 { id: r.user_id, name: r.user_name, email: r.email}
             )
         );
     }
+    
     async getById(id) {
         const db = await openDb();
         const r = await db.get(`
@@ -33,15 +30,11 @@ export class RatingRepository {
         `, [id]);
         await db.close();
         return r
-            ? new Rating(
-                r.id, 
-                r.score, 
-                r.comment, 
-                r.ratedBy,  
-                r.id_user, 
+            ? new Rating(r.id, r.score, r.comment, r.ratedBy,  r.id_user, 
                 { id: r.user_id, name: r.user_name, email: r.email })
             : null;
     }
+
     async getByUser(userId) {
         const db = await openDb();
         const rows = await db.all(`
@@ -54,15 +47,12 @@ export class RatingRepository {
         await db.close();
         return rows.map(
             (r) => new Rating(
-                r.id, 
-                r.score, 
-                r.comment,
-                r.date,
-                r.ratedBy,
+                r.id, r.score, r.comment, r.date, r.ratedBy,
                 { id: r.user_id, name: r.user_name, email: r.email}
             )
         );
     }
+
     async create(rating) {
         const db = await openDb();
         const { score, comment, ratedBy, id_user } = rating;
@@ -75,19 +65,23 @@ export class RatingRepository {
         return result.lastID;
     }
 
-    // === FALTA CORRECCION ===
     async update(id, rating) {
         const db = await openDb();
-        const { score, comment, id_user, id_course } = rating;
+        const { score, comment, ratedBy } = rating;
         await db.run(
-            `UPDATE rating SET score = ?, comment = ?, id_user = ?, id_course = ? WHERE id = ?`,
-            [score, comment, id_user, id_course, id]
+            `UPDATE rating SET score = ?, comment = ?, ratedBy = ? WHERE id = ?`,
+            [score, comment, ratedBy, id]
         );
         await db.close();
+
+        return true;
     }
+
     async delete(id) {
         const db = await openDb();
         await db.run("DELETE FROM rating WHERE id = ?", [id]);
         await db.close();
+
+        return true;
     }
 }

@@ -17,6 +17,7 @@ import pedagogicalMethodController from "./apiControllers/pedagogicalMethodContr
 import ratingController from "./apiControllers/ratingController.js";
 import resourceController from "./apiControllers/resourceController.js"
 import languageController from "./apiControllers/languageController.js";
+import certificateController from "./apiControllers/certificateController.js";
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/api/pedagogical-methods", pedagogicalMethodController);
 app.use("/api/ratings", ratingController);
 app.use("/api/resources", resourceController);
 app.use("/api/languages", languageController);
+app.use("/api/certificates", certificateController);
 
 // Servidor
 const PORT = process.env.PORT || 3000;

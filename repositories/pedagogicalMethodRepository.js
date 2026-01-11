@@ -14,9 +14,9 @@ export class PedagogicalMethodRepository {
         const db = await openDb();
         const r = await db.get("SELECT * FROM pedagogicalMethod WHERE id = ?", [id]);
         await db.close();
-        return r
-            ? new PedagogicalMethod(r.id, r.name, r.description)
-            : null;
+        return r ? new PedagogicalMethod(
+            r.id, r.name, r.description
+        ) : null;
     }
     async create(pedagogicalMethod) {
         const db = await openDb();
@@ -26,6 +26,7 @@ export class PedagogicalMethodRepository {
             VALUES (?, ?)`,
             [name, description]
         );
+
         await db.close();
         return result.lastID;
     }
@@ -37,10 +38,14 @@ export class PedagogicalMethodRepository {
             [name, description, id]
         );
         await db.close();
+
+        return true;
     }
     async delete(id) {
         const db = await openDb();
         await db.run("DELETE FROM pedagogicalMethod WHERE id = ?", [id]);
         await db.close();
+
+        return true;
     }
 }
