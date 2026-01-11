@@ -5,6 +5,7 @@ export class CertificateService {
     constructor() {
         this.CertificateRepository = new CertificateRepository();
     }
+
     async getAllCertificates() {
         return await this.CertificateRepository.getAll();
     }
@@ -33,7 +34,7 @@ export class CertificateService {
             id_user: data.user.id
         });
 
-        return await this.getCertificateById(id); // ✅ ya devuelve con user anidado
+        return await this.getCertificateById(id);
     }
 
     async updateCertificate(id, data) {

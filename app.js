@@ -18,6 +18,7 @@ import ratingController from "./apiControllers/ratingController.js";
 import resourceController from "./apiControllers/resourceController.js"
 import languageController from "./apiControllers/languageController.js";
 import certificateController from "./apiControllers/certificateController.js";
+import ExperienceController from "./apiControllers/experienceController.js";
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/ratings", ratingController);
 app.use("/api/resources", resourceController);
 app.use("/api/languages", languageController);
 app.use("/api/certificates", certificateController);
+app.use("/api/experiences", ExperienceController);
 
 // Servidor
 const PORT = process.env.PORT || 3000;
