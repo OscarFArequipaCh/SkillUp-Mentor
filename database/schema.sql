@@ -190,7 +190,9 @@ CREATE TABLE IF NOT EXISTS message (
   datePublished TEXT DEFAULT (datetime('now')),
   is_read INTEGER DEFAULT 0,
   id_chat INTEGER,
-  FOREIGN KEY (id_chat) REFERENCES chat(id) ON DELETE CASCADE
+  id_user INTEGER,
+  FOREIGN KEY (id_chat) REFERENCES chat(id) ON DELETE CASCADE,
+  FOREIGN KEY(id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- =========================

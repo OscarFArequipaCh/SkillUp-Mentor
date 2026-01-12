@@ -5,39 +5,57 @@ export class ChatService {
   constructor() {
     this.chatRepository = new ChatRepository();
   }
-    async getAllChats() {
+  
+  async getAllChats() {
     return await this.chatRepository.getAll();
   }
-    async getChatById(id) {
+  
+  async getChatById(id) {
     return await this.chatRepository.getById(id);
   }
-    async createChat(data) {
-    if (!data.id_sender || !data.id_receiver) {
+  
+  async createChat(data) {
+    if (!data.sender?.id || !data.receiver?.id) {
         throw new Error("Message, timestamp, user ID, and mentor ID are required");
     }
 
     const newChat = new Chat(
         null,
-        data.id_sender,
-        data.id_receiver,
-        new Date().toISOString()
+        new Date().toISOString(),
+        data.sender,
+        data.receiver
     );
-    const id = await this.chatRepository.create(newChat);
-    return { id, ...newChat };
+
+    const id = await this.chatRepository.create({
+      ...newChat,
+      id_sender: data.sender.id,
+      id_receiver: data.receiver.id
+    });
+
+    return await this.getChatById(id);
   }
-    async updateChat(id, data) {
+  
+  async updateChat(id, data) {
     const existing = await this.chatRepository.getById(id);
     if (!existing) throw new Error("Chat not found");
-    const updated = new Chat(
+
+    const updatedChat = new Chat(
         id,
-        data.id_sender || existing.id_sender,
-        data.id_receiver || existing.id_receiver,
-        existing.created_at
+        existing.created_at,
+        data.sender || existing.sender,
+        data.receiver || existing.receiver
     );
-    await this.chatRepository.update(id, updated);
-    return updated;
+
+    await this.chatRepository.update(id, {
+      ...updatedChat,
+      id_sender: updatedChat.sender.id,
+      id_receiver: updatedChat.receiver.id
+    });
+
+    return await this.getChatById(id);
   }
-    async deleteChat(id) {
+    
+  async deleteChat(id) {
     const existing = await this.chatRepository.getById(id);
     if (!existing) throw new Error("Chat not found");
     await this.chatRepository.delete(id);

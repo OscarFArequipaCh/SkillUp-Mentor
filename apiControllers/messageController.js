@@ -3,6 +3,7 @@ import { MessageService } from "../service/messageService.js";
 
 const router = express.Router();
 const messageService = new MessageService();
+
 // GET /api/messages
 router.get("/", async (req, res) => {
   try {
@@ -12,6 +13,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 // GET /api/messages/:id
 router.get("/:id", async (req, res) => {
     try {
@@ -21,6 +23,7 @@ router.get("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
+
 // POST /api/messages
 router.post("/", async (req, res) => {
     try {
@@ -30,6 +33,7 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 // PUT /api/messages/:id
 router.put("/:id", async (req, res) => {
     try {
@@ -39,6 +43,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 // DELETE /api/messages/:id
 router.delete("/:id", async (req, res) => {
     try {
@@ -48,4 +53,5 @@ router.delete("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
+
 export default router;

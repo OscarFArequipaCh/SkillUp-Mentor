@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 // GET /api/chats/:id
 router.get("/:id", async (req, res) => {
     try {
@@ -24,6 +25,7 @@ router.get("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
+
 // POST /api/chats
 router.post("/", async (req, res) => {
     try {
@@ -33,6 +35,7 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 // PUT /api/chats/:id
 router.put("/:id", async (req, res) => {
     try {
@@ -42,6 +45,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 // DELETE /api/chats/:id
 router.delete("/:id", async (req, res) => {
     try {
@@ -51,4 +55,5 @@ router.delete("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
+
 export default router;
