@@ -5,23 +5,33 @@ export class SessionService {
   constructor() {
     this.sessionRepository = new SessionRepository();
   }
+
   async getAllSessions() {
     return await this.sessionRepository.getAll();
   }
+
   async getSessionById(id) {
     return await this.sessionRepository.getById(id);
   }
-  async createSession(sessionData) {
+
+  async createSession(data) {
     const session = new Session(
       null,
-      sessionData.startDate,
-      sessionData.mode,
-      sessionData.duration,
-      sessionData.status,
-      sessionData.id_course
+      data.startDate,
+      data.mode,
+      data.duration,
+      data.status,
+      data.course
     );
-    return await this.sessionRepository.create(session);
+
+    const id = await this.sessionRepository.create({
+      ...session,
+      id_course: data.course.id
+    });
+
+    return await this.getSessionById(id);
   }
+
   async updateSession(id, sessionData) {
     const existingSession = await this.sessionRepository.getById(id);
     if (!existingSession) {
@@ -33,15 +43,20 @@ export class SessionService {
       sessionData.mode || existingSession.mode,
       sessionData.duration || existingSession.duration,
       sessionData.status || existingSession.status,
-      sessionData.id_course || existingSession.id_course
+      sessionData.course || existingSession.course
     );
-    return await this.sessionRepository.update(id, updatedSession);
+
+    await this.sessionRepository.update(id, {
+      ...updatedSession,
+      id_course: sessionData.course.id
+    });
+    
+    return await this.getSessionById(id);
   }
+
   async deleteSession(id) {
     const existingSession = await this.sessionRepository.getById(id);
-    if (!existingSession) {
-      throw new Error("Session not found");
-    }
+    if (!existingSession) throw new Error("Session not found");
     return await this.sessionRepository.delete(id);
   }
 }

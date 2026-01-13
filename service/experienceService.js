@@ -18,9 +18,8 @@ export class ExperienceService {
     }
 
     async createExperience(data) {
-        if (!data.id_mentor) {
-            throw new Error("Debe enviar un mentor con un ID válido");
-        }
+        if (!data.mentor?.id) throw new Error("Debe enviar un mentor con un ID válido");
+
         const newExperience = new Experience(
             null, 
             data.company, 
@@ -65,7 +64,6 @@ export class ExperienceService {
     async deleteExperience(id) {
         const existing = await this.experienceRepository.getById(id);
         if (!existing) throw new Error("Experience not found");
-        await this.experienceRepository.delete(id);
-        return true;
+        return await this.experienceRepository.delete(id);
     }
 }
